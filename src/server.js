@@ -3,23 +3,21 @@ const cors = require('cors')
 const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
-const User = require('./models/user.modal.js')
-const {handleLogin, handleSignUp} = require('./services/SSservice.js')
+
 const app = express()
 const port = 3000
+
+const authRouter = require('./routes/auth.js')
+const userRouter = require('./routes/user.js')
 
 //bodyParser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+//cors
 app.use(cors())
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-
-app.post('/login',handleLogin)
-app.post('/signup', handleSignUp)
+//routes
+app.use('/', authRouter)
+app.use('/user',userRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
