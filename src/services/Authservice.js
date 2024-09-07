@@ -28,8 +28,7 @@ const handleSignUp = async (req, res) => {
       const {email, username, password} = req.body
       if(email && username && password){
         const result = await User.create({email: email, username: username, password:password})
-        const accessToken = jwt.sign({ username: username, password: password}, process.env.USER_SIGNATURE);
-        res.json({message:'Signup success', success: true, token: accessToken})
+        res.json({message:'Signup success',result: result})
       }else{
         res.status(400).json({'message': 'username, password or email are required'})
       }

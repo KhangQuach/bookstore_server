@@ -1,5 +1,5 @@
 const express = require('express')
-const {handleLogin, handleSignUp} = require('../services/SSservice')
+const {handleLogin, handleSignUp} = require('../services/Authservice')
 const verifyToken = require('../middleware/auth.js')
 const router = express.Router()
 
