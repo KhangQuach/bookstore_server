@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const authRouter = require('./routes/auth.js')
 const userRouter = require('./routes/user.js')
 const bookRouter = require('./routes/book.js')
+const searchRouter = require('./routes/search.js')
 const port = process.env.PORT || 3000
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(cors())
 
 //routes
 app.use('/', authRouter)
+app.use('/search', searchRouter)
 app.use('/user',userRouter)
 app.use('/book',bookRouter)
 

@@ -39,9 +39,7 @@ const getBookById = async (req, res) => {
   }
 }
 
-const getBookByBookName = async (req, res) => {
-    
-}
+
 
 const createBook = async (req, res) => {
   const {
