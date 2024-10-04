@@ -1,53 +1,20 @@
+
 const mongoose = require('mongoose')
+
 const UserSchema = mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    fullname: {
-      type: String,
-    },
-    phone:{
-      type: String,
-      required: false
-    },
-    gender:{
-      type: String,
-      default:'male'
-    }
-    ,
-    birthday:{
-      type: Date
-    },
-    age:{
-      type: Number,
-      default: 0
-    },
-    address1:{
-      type: String
-    },
-    address2:{
-      type: String
-    },
-    address3:{
-      type: String
-    },
-
-    role: {
-      type: String,
-      default: 'user'
-    },
+    username: {type: String, required: true,unique: true},
+    password: {type: String,required: true},
+    email: {type: String,required: true,unique: true},
+    fullname: {type: String},
+    phone:{type: String,required: false},
+    gender:{type: String,default:'male'},
+    birthday:{type: Date},
+    age:{type: Number,default: 0},
+    address1:{type: String},
+    address2:{type: String},
+    address3:{type: String},
+    role: {type: String,default: 'user'},
   },
   { timestamps: true }
 )

@@ -1,12 +1,12 @@
 const User = require('../models/user.modal.js')
-
+const Cart = require('../models/cart.modal.js')
 const handleGetUser = async (req, res) => {
   try{
-    const username = req.params['username']
-    if(!username) {
-       return res.status(404).json({message: 'username is required'})
+    const id = req.params['id']
+    if(!id) {
+       return res.status(404).json({message: 'id is required'})
     }
-    const result = await User.findOne({ username: username})
+    const result = await User.findById(id)
     if(!result){
       return res.status(404).json({message: 'User not found'})
     }
@@ -21,9 +21,9 @@ const handleGetUser = async (req, res) => {
 
 const handleUpdateUser = async (req, res) => {
   try{
-  const filter = {username : req.params['username']}
-  if(!filter){
-      return res.status(404).json({message: 'username is required'})
+  const id = req.params['id']
+  if(!id){
+      return res.status(404).json({message: 'id is required'})
     }
     const {username, password, email, fullname, phone, birthday, age, address1, address2, address3} = req.body
     const update = {
@@ -38,7 +38,7 @@ const handleUpdateUser = async (req, res) => {
       address2: address2,
       address3: address3 
     }
-    const result = await User.findOneAndUpdate(filter, update)
+    const result = await User.findByIdAndUpdate(id, update)
     if(!result){
       return res.status(404).json({message: 'User not found'})
     }
@@ -49,4 +49,26 @@ const handleUpdateUser = async (req, res) => {
     res.status(500).json({message: 'Server Error'})
   }
 }
-module.exports = { handleGetUser, handleUpdateUser}
+
+const handleDeleteUser = async (req, res) => {
+  try{
+    const id = req.params['id']
+    if(!id) {
+       return res.status(404).json({message: 'id is required'})
+    }
+    const deletedUser = await User.findByIdAndDelete(id)
+    if(!deletedUser){
+      return res.status(404).json({message: 'User not found'})
+    }
+    const deletedCart = await Cart.findOneAndDelete({userId: id})
+    if(!deletedCart){
+      return res.status(404).json({message: 'Cart not found'})
+    }
+    res.json({message: `user ${id} has been deleted`})
+  }
+  catch(e){
+    console.log(e)
+    res.status(500).json({message: 'Server Error'})
+  }
+}
+module.exports = { handleGetUser, handleUpdateUser, handleDeleteUser}

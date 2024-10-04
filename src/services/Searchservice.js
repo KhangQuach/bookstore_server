@@ -3,15 +3,15 @@ const Book = require('../models/book.modal.js')
 const searchBook = async (req, res) => {
   console.log(req.query.bookName)
   try{
-    const data = await Book.find({
+    const result = await Book.find({
       "$or": [
-        {name: {$regex: req.query.bookName}},
-        {author: {$regex: req.query.bookName}},
-        {category: {$regex: req.query.bookName}},
-        {publisher: {$regex: req.query.bookName}}
+        {name: {$regex: req.query.bookName, $options: 'i'}},
+        {author: {$regex: req.query.bookName, $options: 'i'}},
+        {category: {$regex: req.query.bookName, $options: 'i'}},
+        {publisher: {$regex: req.query.bookName, $options: 'i'}}
       ]
     })
-    res.json({data})
+    res.json(result)
   }
   catch(err){
     console.error(err)
