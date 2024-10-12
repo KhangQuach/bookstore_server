@@ -56,11 +56,11 @@ const createBook = async (req, res) => {
       publishDate, publisher, language,
       pageNumber, description, category
     })
-    res.json({result:result, message:'Created book'})
+    res.json({result:result, message:'Created book', success: true})
   }
   catch(err){
     console.error(err)
-    res.status(500).send("Cant create book")
+    res.json({result:result, message: 'Cant create book', success: false})
   }
 }
 

@@ -1,5 +1,33 @@
 const User = require('../models/user.modal.js')
 const Cart = require('../models/cart.modal.js')
+
+const handleCreateUser = async (req, res) =>{
+  try{
+    const {
+      username, password, email,
+      fullname ,role, phone,
+      birthday, age,gender,
+      address1, address2, address3
+    } = req.body
+    
+    const result = await User.create({
+      username, password, email,
+      fullname ,role, phone,
+      birthday, age,gender,
+      address1, address2, address3
+    })
+    if(!result){
+      return res.status(404).json({message: 'User not found'})
+    }
+    const cart = await Cart.create({userId: result._id, cartItem:[]})
+    res.status(200).json({message:'Created user',success:true, result})
+  }
+  catch(e){
+    console.log(e)
+    res.json({message: 'Cant create user', success: false})
+  }
+}
+
 const handleGetUser = async (req, res) => {
   try{
     const id = req.params['id']
@@ -18,35 +46,47 @@ const handleGetUser = async (req, res) => {
     res.status(500).json({message: 'Server Error'})
   }
 }
-
+const handleGetAllUsers = async (req, res) => {
+  try{
+    const result = await User.find()
+    res.json(result)
+  }
+  catch(e){
+    console.log(e)
+    res.status(500).json({message: 'Server Error'})
+  }
+}
 const handleUpdateUser = async (req, res) => {
   try{
   const id = req.params['id']
   if(!id){
       return res.status(404).json({message: 'id is required'})
     }
-    const {username, password, email, fullname, phone, birthday, age, address1, address2, address3} = req.body
+    const {username, password, email, fullname, role ,phone, birthday, age,gender , address1, address2, address3, description} = req.body
     const update = {
       username: username,
       password: password,
       email:email,
       fullname: fullname,
+      gender: gender,
+      role :role,
       phone: phone,
       birthday: birthday,
       age: age,
       address1: address1 ,
       address2: address2,
-      address3: address3 
+      address3: address3,
+      description: description
     }
     const result = await User.findByIdAndUpdate(id, update)
     if(!result){
-      return res.status(404).json({message: 'User not found'})
+      return res.status(404).json({message: 'User not found',success: false})
     }
-    res.json(result)
+    res.json({result, success:true})
   }
   catch(e){
     console.log(e)
-    res.status(500).json({message: 'Server Error'})
+    res.status(500).json({message: 'Data existed',success: false})
   }
 }
 
@@ -71,4 +111,4 @@ const handleDeleteUser = async (req, res) => {
     res.status(500).json({message: 'Server Error'})
   }
 }
-module.exports = { handleGetUser, handleUpdateUser, handleDeleteUser}
+module.exports = { handleGetUser, handleUpdateUser, handleDeleteUser, handleGetAllUsers, handleCreateUser}
