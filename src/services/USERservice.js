@@ -1,6 +1,26 @@
 const User = require('../models/user.modal.js')
 const Cart = require('../models/cart.modal.js')
 
+const handleCountUsersByRole = async function(req, res) {
+  try {
+    const userRole = req.params["role"];
+    const userCountByRole = await User.countDocuments({ role: userRole });
+    
+    res.json({ role: userRole, count: userCountByRole });
+  } catch (error) {
+    res.status(500).json({ message: 'Error counting users by role', error: error.message });
+  }
+}
+const handleCountUsers = async function(req, res) {
+  try{
+    const result = await User.countDocuments({})
+    res.json({message: 'User count', count: result})
+  }
+  catch(e){
+    console.log(e)
+    res.json({message: 'Cant count users', success: false})
+  }
+}
 const handleCreateUser = async (req, res) =>{
   try{
     const {
@@ -111,4 +131,4 @@ const handleDeleteUser = async (req, res) => {
     res.status(500).json({message: 'Server Error'})
   }
 }
-module.exports = { handleGetUser, handleUpdateUser, handleDeleteUser, handleGetAllUsers, handleCreateUser}
+module.exports = { handleGetUser, handleUpdateUser, handleDeleteUser, handleGetAllUsers, handleCreateUser, handleCountUsers, handleCountUsersByRole}

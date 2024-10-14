@@ -1,5 +1,26 @@
 const Book = require('../models/book.modal.js')
 
+const getCountBookByCategory = async (req, res) =>{
+  try{
+    const category = req.params["category"]
+    const result = await Book.countDocuments({category: category})
+    res.json({message: 'Book count by category', count: result})
+  }
+  catch(err){
+    console.log(e)
+    res.json({message: 'Cant count books by category', success: false})
+  }
+}
+const getCountBook = async (req, res) => {
+  try{
+    const result = await Book.countDocuments({})
+    res.json({message: 'Book count', count: result})
+  }
+  catch(err){
+    console.log(e)
+    res.json({message: 'Cant count books', success: false})
+  }
+}
 const getAllBooks = async (req, res) => {
   try{
     const result = await Book.find({})
@@ -109,4 +130,4 @@ const deleteBook = async (req, res) => {
     res.status(500).send("Cant delete book!")
   }
 }
-module.exports = { getAllBooks,getBookByCategory , getBookById, createBook, updateBook, deleteBook }
+module.exports = { getAllBooks,getBookByCategory , getBookById, createBook, updateBook, deleteBook, getCountBook, getCountBookByCategory}
