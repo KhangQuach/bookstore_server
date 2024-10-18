@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth.js')
 const userRouter = require('./routes/user.js')
 const bookRouter = require('./routes/book.js')
 const searchRouter = require('./routes/search.js')
+const cartRouter = require('./routes/cart.js')
 const port = process.env.PORT || 3000
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/', authRouter)
 app.use('/search', searchRouter)
 app.use('/user',userRouter)
 app.use('/book',bookRouter)
+app.use('/cart',cartRouter)
 
 
 app.listen(port, () => {
