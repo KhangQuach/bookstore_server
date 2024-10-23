@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
 const BorrowedBookSchema = mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User',required: true},
+    bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book',required: true},
     part: { type: Number},
     type: {type: String},
-    borrowDate: { type: Date, default: Date.now },
+    status: {type: String, default: 'pending', enum: ['pending', 'success', 'deny']},
+    borrowDate: { type: Date, default: Date.now, required: true},
     returnDate: { type: Date, required: true }
   }
 )
