@@ -2,16 +2,17 @@
 const BorrowedBook = require('../models/borrow.modal.js');
 const User = require('../models/user.modal.js')
 const Book = require('../models/book.modal.js')
+
 const createBorrowedBook = async (req, res) => {
   try {
     const { userId, bookId, part, type, returnDate } = req.body
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({success:false, message: 'User not found' });
     }
     const book = await Book.findById(bookId);
     if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
+      return res.status(404).json({success:false, message: 'Book not found' });
     }
     const borrowedBook = new BorrowedBook({
         userId,
@@ -21,9 +22,9 @@ const createBorrowedBook = async (req, res) => {
         returnDate
     })
     await borrowedBook.save()
-    res.status(201).json({ message: 'Book borrowed successfully', borrowedBook })
+    res.status(201).json({success:true, message: 'Book borrowed successfully', borrowedBook })
   } catch (error) {
-      res.status(500).json({ message: 'Error borrowing the book', error })
+      res.status(500).json({success:false, message: 'Error borrowing the book', error })
   }
 }
 
@@ -40,5 +41,30 @@ const getBorrowedByUserId = async (req, res) => {
   }
 }
 
-module.exports = {createBorrowedBook, getBorrowedByUserId}
+const deleteBorrowedBook = async (req, res) => {
+  try {
+    const borrowedBookId = req.params.borrowedId
+    const deletedBorrowedBook = await BorrowedBook.findByIdAndDelete(borrowedBookId)
+    if (!deletedBorrowedBook) {
+      return res.status(404).json({success:false, message: 'Borrowed book not found' });
+    }
+    res.status(200).json({success:true, message: 'Borrowed book deleted successfully' })
+  } catch (error) {
+    res.status(500).json({success:false, message: 'Error deleting borrowed book', error })
+  }
+}
+const getNumberOfBorrowedBook = async (req, res) => {
+  try {
+    const userId = req.params.userId
+    const borrowedBooks = await BorrowedBook.countDocuments({ userId })
+    const totalPending = await BorrowedBook.countDocuments({userId, status:"pending" })
+    const totalSuccess = await BorrowedBook.countDocuments({userId, status:"success" })
+    const totalDeny = await BorrowedBook.countDocuments({userId, status:"deny" })
+    const totalExpired = await BorrowedBook.countDocuments({userId, status:"expired"})
+    res.status(200).json({success:true,borrowedBooks,totalPending,totalSuccess,totalDeny,totalExpired})
+  } catch (error) {
+    res.status(500).json({success:false, message: 'Error counting borrowed books', error })
+  }
+}
+module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook}
 

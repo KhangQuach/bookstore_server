@@ -5,9 +5,17 @@ const BorrowedBookSchema = mongoose.Schema(
     bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book',required: true},
     part: { type: Number},
     type: {type: String},
-    status: {type: String, default: 'pending', enum: ['pending', 'success', 'deny']},
-    borrowDate: { type: Date, default: Date.now, required: true},
-    returnDate: { type: Date, required: true }
+    status: {type: String, default: 'pending', enum: ['pending', 'success', 'deny', 'expired']},
+    borrowDate: { type: Date, default: Date.now},
+    returnDate: { 
+      type: Date,
+      default: function() {
+        const date = new Date()
+        date.setDate(date.getDate() + 7)
+        return date;
+      },
+      required: true 
+    }
   }
 )
 const BorrowedBook = mongoose.model('BorrowedBook', BorrowedBookSchema);
