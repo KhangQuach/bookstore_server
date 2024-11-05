@@ -3,9 +3,17 @@ const BorrowedBook = require('../models/borrow.modal.js');
 const User = require('../models/user.modal.js')
 const Book = require('../models/book.modal.js')
 
+const getAllBorrowedBook = async (req, res) => {
+  try {
+    const borrowedBooks = await BorrowedBook.find().populate({ path: "userId", select: "username" }).populate("bookId")
+    res.status(200).json(borrowedBooks)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching borrowed books', error })
+  }
+}
 const createBorrowedBook = async (req, res) => {
   try {
-    const { userId, bookId, part, type, returnDate } = req.body
+    const { userId, bookId, part, type, returnDate, username, bookname } = req.body
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({success:false, message: 'User not found' });
@@ -19,7 +27,9 @@ const createBorrowedBook = async (req, res) => {
         bookId,
         part,
         type,
-        returnDate
+        returnDate,
+        username,
+        bookname
     })
     await borrowedBook.save()
     res.status(201).json({success:true, message: 'Book borrowed successfully', borrowedBook })
@@ -66,5 +76,5 @@ const getNumberOfBorrowedBook = async (req, res) => {
     res.status(500).json({success:false, message: 'Error counting borrowed books', error })
   }
 }
-module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook}
+module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook, getAllBorrowedBook}
 

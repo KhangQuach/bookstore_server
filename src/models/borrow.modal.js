@@ -3,6 +3,8 @@ const BorrowedBookSchema = mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User',required: true},
     bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book',required: true},
+    bookname:{ type: String, required: true},
+    username:{ type: String, required: true},
     part: { type: Number},
     type: {type: String},
     status: {type: String, default: 'pending', enum: ['pending', 'success', 'deny', 'expired']},
