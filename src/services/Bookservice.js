@@ -88,7 +88,7 @@ const createBook = async (req, res) => {
 const updateBook = async (req, res) => {
   const { id } = req.params
   if(!id){
-    return res.status(404).json({message: 'ID is required'})
+    return res.status(404).json({success:false, message: 'ID is required'})
   }
   try {
     const {
@@ -108,7 +108,7 @@ const updateBook = async (req, res) => {
     if(!result) {
       return res.status(404).json({message: 'Book not found',id})  // return 404 if the book is not found in the database.
     }
-    res.status(200).json({result: result, message:"Book updated successfully"})
+    res.status(200).json({success:true, result: result, message:"Book updated successfully"})
   }
   catch(err){
     console.error(err)
