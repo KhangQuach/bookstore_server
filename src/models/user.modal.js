@@ -15,7 +15,8 @@ const UserSchema = mongoose.Schema(
     address2:{type: String},
     address3:{type: String},
     role: {type: String, default: 'user'},
-    description: {type: String}
+    description: {type: String},
+    avatar: {type: String}
   },
   { timestamps: true }
 )

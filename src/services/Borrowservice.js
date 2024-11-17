@@ -76,5 +76,37 @@ const getNumberOfBorrowedBook = async (req, res) => {
     res.status(500).json({success:false, message: 'Error counting borrowed books', error })
   }
 }
-module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook, getAllBorrowedBook}
+
+const updateStatus = async (req, res) => {
+  try {
+    const borrowedBookId = req.params.borrowedId;
+    const { status } = req.body;
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required' });
+    }
+    const borrowedBook = await BorrowedBook.findById(borrowedBookId);
+    if (!borrowedBook) {
+      return res.status(404).json({ success: false, message: 'Borrowed book not found' });
+    }
+    if (borrowedBook.status === 'success') {
+      return res.json({ success: false,status:"success", message: 'Borrowed book is already in "success" state' });
+    }
+
+    borrowedBook.status = status;
+    await borrowedBook.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Status updated successfully',
+      borrowedBook,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating status',
+      error: error.message || error,
+    });
+  }
+}
+module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook, getAllBorrowedBook, updateStatus}
 
