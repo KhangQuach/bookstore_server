@@ -108,5 +108,16 @@ const updateStatus = async (req, res) => {
     });
   }
 }
-module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook, getAllBorrowedBook, updateStatus}
+
+const getCountBookByStatus = async (req, res) => {
+  try {
+    const { status } = req.params;
+    const count = await BorrowedBook.countDocuments({ status });
+    res.status(200).json({ success: true, count, status });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error counting books by status', error });
+  }
+ 
+}
+module.exports = {createBorrowedBook, getBorrowedByUserId, deleteBorrowedBook, getNumberOfBorrowedBook, getAllBorrowedBook, updateStatus, getCountBookByStatus}
 
